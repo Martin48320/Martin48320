@@ -1,0 +1,39 @@
+https://chat.openai.com/share/5457174d-7473-4795-b4b1-e112e44a1122 
+ #!/bin/bash
+
+# Function to check if a port is open
+check_port() {
+    port=$1
+    nc -zv <Jamf_Server_IP> $port &> /dev/null
+    if [ $? -eq 0 ]; then
+        echo "Port $port is open"
+    else
+        echo "Port $port is closed"
+        # You can add actions to open the port here
+        # For example, using firewall-cmd or ufw commands
+    fi
+}
+
+# Function to check network connectivity to Jamf server
+check_connectivity() {
+    ping -c 4 <Jamf_Server_IP> &> /dev/null
+    if [ $? -eq 0 ]; then
+        echo "Connectivity to Jamf server is good"
+    else
+        echo "Unable to ping Jamf server"
+        # You can add actions to troubleshoot network connectivity here
+        # For example, checking DNS resolution or network configurations
+    fi
+}
+
+# Main function
+main() {
+    echo "Checking Jamf server connectivity and firewall settings..."
+    check_port 80   # HTTP
+    check_port 443  # HTTPS
+    check_connectivity
+    echo "Jamf unblocking script completed."
+}
+
+# Run the main function
+main
